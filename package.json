@@ -4,5 +4,8 @@
   "description": "Desktop floating widget for Spotify now-playing lyrics",
   "main": "main.js",
 "scripts": {"start": "electron . --no-sandbox", "start:headless": "electron . --no-sandbox --headless"},
-  "devDependencies": {"electron": "^38.0.0"}
+  "devDependencies": {"electron": "^38.0.0"},
+  "allowScripts": {
+    "electron": true
+  }
 }
