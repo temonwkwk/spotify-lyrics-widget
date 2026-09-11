@@ -62,7 +62,7 @@ async function startAuth(clientId) {
   });
 }
 function createWindow() {
-  win = new BrowserWindow({width:360,height:190,minWidth:360,minHeight:190,frame:false,transparent:true,alwaysOnTop:true,resizable:true,webPreferences:{preload:path.join(__dirname,'preload.js'),contextIsolation:true}});
+  win = new BrowserWindow({width:360,height:205,minWidth:360,minHeight:205,frame:false,transparent:true,alwaysOnTop:true,resizable:true,webPreferences:{preload:path.join(__dirname,'preload.js'),contextIsolation:true}});
   win.loadFile('index.html'); win.setAlwaysOnTop(true, 'floating');
 }
 app.whenReady().then(createWindow);
