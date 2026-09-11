@@ -1,21 +1,20 @@
 const $ = (id) => document.getElementById(id);
 $('close').onclick = () => window.desktop.close();
 $('min').onclick = () => window.desktop.minimize();
-const connectButton = $('connect');
+const settingsButton = $('settings');
 const modal = $('modal');
 const clientIdInput = $('client-id');
-connectButton.addEventListener('click', () => { modal.classList.add('show'); clientIdInput.focus(); });
 $('cancel-connect').addEventListener('click', () => modal.classList.remove('show'));
 $('submit-connect').addEventListener('click', async () => {
   const clientId = clientIdInput.value.trim();
   if (!clientId) return clientIdInput.focus();
   modal.classList.remove('show');
-  const btn = connectButton; btn.disabled = true; btn.textContent = 'OPENING SPOTIFY...';
-  try { await window.desktop.spotifyAuth(clientId); btn.textContent = 'SPOTIFY CONNECTED'; $('status').textContent = 'READY'; startPolling(); }
-  catch (e) { window.alert(e?.message || 'Gagal menghubungkan Spotify'); btn.textContent = 'CONNECT SPOTIFY'; }
-  finally { btn.disabled = false; }
+  const btn = $('submit-connect'); btn.disabled = true; btn.textContent = 'MEMBUKA SPOTIFY...';
+  try { await window.desktop.spotifyAuth(clientId); $('status').textContent = 'READY'; startPolling(); }
+  catch (e) { window.alert(e?.message || 'Gagal menghubungkan Spotify'); }
+  finally { btn.disabled = false; btn.textContent = 'LANJUT'; }
 });
-$('settings').onclick = () => window.alert('Spotify Client ID bisa dimasukkan lewat tombol CONNECT SPOTIFY.');
+settingsButton.onclick = () => { modal.classList.add('show'); clientIdInput.focus(); };
 
 async function fetchLyrics(artist, title) {
   const params = new URLSearchParams({artist_name: artist, track_name: title});
@@ -74,4 +73,4 @@ function updatePlaybackUI() {
   requestAnimationFrame(updatePlaybackUI);
 }
 function startPolling() { poll(); setInterval(poll, 5000); }
-window.addEventListener('DOMContentLoaded', async () => { if (await window.desktop.spotifyStatus()) { connectButton.textContent = 'SPOTIFY CONNECTED'; startPolling(); } else requestAnimationFrame(updatePlaybackUI); });
+window.addEventListener('DOMContentLoaded', async () => { if (await window.desktop.spotifyStatus()) { $('status').textContent = 'CONNECTED'; startPolling(); } else requestAnimationFrame(updatePlaybackUI); });
