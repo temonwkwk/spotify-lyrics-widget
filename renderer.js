@@ -1,6 +1,11 @@
 const $ = (id) => document.getElementById(id);
-$('close').onclick = () => window.desktop.close();
-$('min').onclick = () => window.desktop.minimize();
+function bindWindowControl(id, action) {
+  const button = $(id);
+  button.addEventListener('pointerdown', (event) => { event.preventDefault(); event.stopPropagation(); });
+  button.addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); action(); });
+}
+bindWindowControl('close', () => window.desktop.close());
+bindWindowControl('min', () => window.desktop.minimize());
 const settingsButton = $('settings');
 const modal = $('modal');
 const clientIdInput = $('client-id');
