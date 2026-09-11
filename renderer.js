@@ -1,4 +1,6 @@
 const $ = (id) => document.getElementById(id);
+$('close').onclick = () => window.desktop.close();
+$('min').onclick = () => window.desktop.minimize();
 const settingsButton = $('settings');
 const modal = $('modal');
 const clientIdInput = $('client-id');
