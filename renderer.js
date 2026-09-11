@@ -1,14 +1,17 @@
 const $ = (id) => document.getElementById(id);
 $('close').onclick = () => window.desktop.close();
 $('min').onclick = () => window.desktop.minimize();
-$('connect').onclick = async () => {
-  const clientId = prompt('Masukkan Spotify Client ID:\nBuat di developer.spotify.com/dashboard\nRedirect URI: http://127.0.0.1:43821/callback');
-  if (!clientId) return;
+$('connect').addEventListener('click', async (event) => {
+  event.preventDefault();
+  const clientId = window.prompt('Masukkan Spotify Client ID:\nBuat di developer.spotify.com/dashboard\nRedirect URI: http://127.0.0.1:43821/callback');
+  if (!clientId?.trim()) return;
   const btn = $('connect'); btn.disabled = true; btn.textContent = 'OPENING SPOTIFY...';
-  try { await window.desktop.spotifyAuth(clientId.trim()); btn.textContent = 'SPOTIFY CONNECTED'; $('status').textContent = 'READY'; startPolling(); }
-  catch (e) { alert(e.message); btn.textContent = 'CONNECT SPOTIFY'; }
+  try {
+    await window.desktop.spotifyAuth(clientId.trim());
+    btn.textContent = 'SPOTIFY CONNECTED'; $('status').textContent = 'READY'; startPolling();
+  } catch (e) { window.alert(e?.message || 'Gagal menghubungkan Spotify'); btn.textContent = 'CONNECT SPOTIFY'; }
   finally { btn.disabled = false; }
-};
+});
 $('settings').onclick = () => alert('Spotify Client ID bisa dimasukkan lewat tombol CONNECT SPOTIFY.');
 
 async function fetchLyrics(artist, title) {
