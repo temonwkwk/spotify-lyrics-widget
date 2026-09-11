@@ -44,7 +44,16 @@ function updateLyrics(positionMs) {
   const index = activeLineIndex(syncedLines, positionMs);
   document.querySelectorAll('.lyrics .line').forEach((el, i) => el.classList.toggle('active', i === index));
   const active = document.querySelector('.lyrics .line.active');
-  if (active && active.offsetTop > 100) active.scrollIntoView({block:'center', behavior:'smooth'});
+  // Jangan scroll seluruh widget saat baris aktif berubah; area lyrics
+  // sudah memiliki overflow sendiri dan layout sticky-note harus tetap stabil.
+  if (active && active.parentElement) {
+    const box = active.parentElement;
+    const top = active.offsetTop - box.scrollTop;
+    const bottom = top + active.offsetHeight;
+    if (top < 0 || bottom > box.clientHeight) {
+      box.scrollTop = active.offsetTop - Math.max(0, (box.clientHeight - active.offsetHeight) / 2);
+    }
+  }
 }
 let lastTrack = '';
 let playback = {positionMs: 0, durationMs: 0, receivedAt: 0, playing: false};
