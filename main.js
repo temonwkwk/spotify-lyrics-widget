@@ -1,6 +1,9 @@
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 
+// Hindari error driver AMD/VideoProcessor pada beberapa Windows GPU.
+app.disableHardwareAcceleration();
+
 let win;
 function createWindow() {
   win = new BrowserWindow({
