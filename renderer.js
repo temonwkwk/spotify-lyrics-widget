@@ -1,15 +1,18 @@
 const $ = (id) => document.getElementById(id);
 $('close').onclick = () => window.desktop.close();
 $('min').onclick = () => window.desktop.minimize();
-$('connect').addEventListener('click', async (event) => {
-  event.preventDefault();
-  const clientId = window.prompt('Masukkan Spotify Client ID:\nBuat di developer.spotify.com/dashboard\nRedirect URI: http://127.0.0.1:43821/callback');
-  if (!clientId?.trim()) return;
-  const btn = $('connect'); btn.disabled = true; btn.textContent = 'OPENING SPOTIFY...';
-  try {
-    await window.desktop.spotifyAuth(clientId.trim());
-    btn.textContent = 'SPOTIFY CONNECTED'; $('status').textContent = 'READY'; startPolling();
-  } catch (e) { window.alert(e?.message || 'Gagal menghubungkan Spotify'); btn.textContent = 'CONNECT SPOTIFY'; }
+const connectButton = $('connect');
+const modal = $('modal');
+const clientIdInput = $('client-id');
+connectButton.addEventListener('click', () => { modal.classList.add('show'); clientIdInput.focus(); });
+$('cancel-connect').addEventListener('click', () => modal.classList.remove('show'));
+$('submit-connect').addEventListener('click', async () => {
+  const clientId = clientIdInput.value.trim();
+  if (!clientId) return clientIdInput.focus();
+  modal.classList.remove('show');
+  const btn = connectButton; btn.disabled = true; btn.textContent = 'OPENING SPOTIFY...';
+  try { await window.desktop.spotifyAuth(clientId); btn.textContent = 'SPOTIFY CONNECTED'; $('status').textContent = 'READY'; startPolling(); }
+  catch (e) { window.alert(e?.message || 'Gagal menghubungkan Spotify'); btn.textContent = 'CONNECT SPOTIFY'; }
   finally { btn.disabled = false; }
 });
 $('settings').onclick = () => alert('Spotify Client ID bisa dimasukkan lewat tombol CONNECT SPOTIFY.');
