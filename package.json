@@ -11,7 +11,8 @@
   "build": {
     "appId": "com.temonwkwk.spotifylyricswidget",
     "productName": "Spotify Lyrics Widget",
-    "compression": "maximum",
+    "compression": "normal",
+    "electronLanguages": ["en-US", "id"],
     "asar": true,
     "files": [
       "main.js",
