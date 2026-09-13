@@ -3,9 +3,34 @@
   "version": "0.1.0",
   "description": "Desktop floating widget for Spotify now-playing lyrics",
   "main": "main.js",
-"scripts": {"start": "electron . --no-sandbox --disable-gpu", "start:headless": "electron . --no-sandbox --headless"},
-  "devDependencies": {"electron": "^38.0.0"},
-  "allowScripts": {
-    "electron": true
+  "scripts": {
+    "start": "electron . --no-sandbox --disable-gpu",
+    "start:headless": "electron . --no-sandbox --headless",
+    "build:win": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.temonwkwk.spotifylyricswidget",
+    "productName": "Spotify Lyrics Widget",
+    "compression": "maximum",
+    "asar": true,
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "renderer.js",
+      "lyrics-sync.js",
+      "style.css",
+      "package.json"
+    ],
+    "win": {
+      "target": ["portable"],
+      "artifactName": "Spotify-Lyrics-Widget-Portable.${ext}"
+    },
+    "nsis": {"oneClick": true},
+    "portable": {"requestExecutionLevel": "user"}
+  },
+  "devDependencies": {
+    "electron": "^38.0.0",
+    "electron-builder": "^26.15.3"
   }
 }
