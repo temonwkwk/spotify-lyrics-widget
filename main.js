@@ -6,6 +6,25 @@ const crypto = require('crypto');
 app.disableHardwareAcceleration();
 let win;
 let callbackServer;
+let dragTimer;
+let dragOffset;
+
+function startWindowDrag() {
+  if (!win || dragTimer) return;
+  const cursor = require('electron').screen.getCursorScreenPoint();
+  const bounds = win.getBounds();
+  dragOffset = { x: cursor.x - bounds.x, y: cursor.y - bounds.y };
+  dragTimer = setInterval(() => {
+    if (!win || win.isDestroyed()) return stopWindowDrag();
+    const point = require('electron').screen.getCursorScreenPoint();
+    win.setPosition(Math.round(point.x - dragOffset.x), Math.round(point.y - dragOffset.y));
+  }, 16);
+}
+function stopWindowDrag() {
+  if (dragTimer) clearInterval(dragTimer);
+  dragTimer = null;
+  dragOffset = null;
+}
 const REDIRECT_URI = 'http://127.0.0.1:43821/callback';
 const SCOPES = 'user-read-playback-state user-read-currently-playing';
 
@@ -69,6 +88,8 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 ipcMain.on('window-close', () => win?.close());
 ipcMain.on('window-minimize', () => win?.minimize());
+ipcMain.on('window-drag-start', startWindowDrag);
+ipcMain.on('window-drag-stop', stopWindowDrag);
 ipcMain.handle('spotify-auth', (_, clientId) => startAuth(clientId));
 ipcMain.handle('spotify-status', () => Boolean(loadToken()?.access_token));
 ipcMain.handle('spotify-now-playing', async () => {

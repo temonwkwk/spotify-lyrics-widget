@@ -6,6 +6,12 @@ function bindWindowControl(id, action) {
 }
 bindWindowControl('close', () => window.desktop.close());
 bindWindowControl('min', () => window.desktop.minimize());
+const dragSurface = document.querySelector('.card');
+dragSurface.addEventListener('pointerdown', (event) => {
+  if (event.button === 0 && !event.target.closest('button, input')) window.desktop.dragStart();
+});
+window.addEventListener('pointerup', () => window.desktop.dragStop());
+window.addEventListener('blur', () => window.desktop.dragStop());
 const settingsButton = $('settings');
 const modal = $('modal');
 const clientIdInput = $('client-id');
